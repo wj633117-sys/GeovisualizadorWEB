@@ -19,15 +19,15 @@ window.INDICADORES = {
  "usos": [
   {
    "cat": "Residencial",
-   "m2": 489028,
-   "porc": 46.13,
+   "m2": 489525,
+   "porc": 46.18,
    "color": "#E69F00"
   },
   {
-   "cat": "Residencial en consolidación",
-   "m2": 199366,
-   "porc": 18.81,
-   "color": "#F7CF8A"
+   "cat": "Agrícola",
+   "m2": 244308,
+   "porc": 23.05,
+   "color": "#F0E442"
   },
   {
    "cat": "Vial",
@@ -36,16 +36,10 @@ window.INDICADORES = {
    "color": "#9e9e9e"
   },
   {
-   "cat": "Suelo vacante",
-   "m2": 108993,
-   "porc": 10.28,
-   "color": "#D9C9A3"
-  },
-  {
-   "cat": "Agrícola",
-   "m2": 49971,
-   "porc": 4.71,
-   "color": "#F0E442"
+   "cat": "Residencial en consolidación",
+   "m2": 104403,
+   "porc": 9.85,
+   "color": "#F7CF8A"
   },
   {
    "cat": "Cuerpo de agua",
@@ -54,23 +48,29 @@ window.INDICADORES = {
    "color": "#56B4E9"
   },
   {
+   "cat": "Recreación y área verde",
+   "m2": 19345,
+   "porc": 1.82,
+   "color": "#009E73"
+  },
+  {
    "cat": "Equipamiento",
-   "m2": 18787,
-   "porc": 1.77,
+   "m2": 13063,
+   "porc": 1.23,
    "color": "#CC79A7"
   },
   {
-   "cat": "Recreación y área verde",
-   "m2": 12616,
-   "porc": 1.19,
-   "color": "#009E73"
+   "cat": "Suelo vacante",
+   "m2": 8115,
+   "porc": 0.77,
+   "color": "#D9C9A3"
   }
  ],
  "dominante": {
   "cat": "Residencial",
-  "porc": 46.13
+  "porc": 46.18
  },
- "reserva_pct": 29.09,
+ "reserva_pct": 10.62,
  "km_total": 19.96,
  "km_tierra": 2.4,
  "pct_tierra": 12.03,
@@ -87,10 +87,10 @@ window.INDICADORES = {
   "n": 1
  },
  "verde": {
-  "m2": 12616,
-  "m2_hab": 2.53,
+  "m2": 19345,
+  "m2_hab": 3.88,
   "oms": 9.0,
-  "deficit": 32276
+  "deficit": 25547
  },
  "riesgo": {
   "alta": 45.2,
