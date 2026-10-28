@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="initial-scale=1,user-scalable=no,maximum-scale=1,width=device-width">
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <link rel="stylesheet" href="./resources/ol.css">
+        <link rel="stylesheet" href="resources/fontawesome-all.min.css">
+        <link href="resources/photon-geocoder-autocomplete.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="./resources/ol-layerswitcher.css">
+        <link rel="stylesheet" href="./resources/qgis2web.css">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+        <link rel="stylesheet" href="./resources/geovisualizador.css">
+        <style>
+        html, body {
+            background-color: #ffffff;
+        }
+        .ol-control > * {
+            background-color: #ffffff!important;
+            color: #1d1d1f!important;
+            border-radius: 0px;
+        }
+        .ol-attribution a, .gcd-gl-input::placeholder, .search-layer-input-search::placeholder {
+            color: #1d1d1f!important;
+        }
+        .search-layer-input-search {
+            background-color: #ffffff!important;
+        }
+        .ol-control > *:focus, .ol-control >*:hover {
+            background-color: rgba(255, 255, 255, 0.7)!important;
+        } 
+        .ol-control {
+            background-color: rgba(255,255,255,.4) !important;
+            padding: 2px !important;
+        } 
+        </style>
+
+        <style>
+        html, body, #map {
+            width: 100%;
+            height: 100%;
+            padding: 0;
+            margin: 0;
+        }
+        </style>
+        <title>Geovisualizador Urbano · Buenavista</title>
+    </head>
+    <body>
+<!-- Interfaz del Geovisualizador (se inserta después de <body> en el index.html de qgis2web) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-chart" viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+  <symbol id="i-layers" viewBox="0 0 24 24"><path d="M12 3 2 8l10 5 10-5-10-5Zm-10 9 10 5 10-5M2 16l10 5 10-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></symbol>
+  <symbol id="i-minus" viewBox="0 0 24 24"><path d="M5 12h14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></symbol>
+  <symbol id="i-home" viewBox="0 0 24 24"><path d="M3 11 12 4l9 7M5 10v10h5v-6h4v6h5V10" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></symbol>
+  <symbol id="i-ruler" viewBox="0 0 24 24"><path d="m3 17 14-14 4 4L7 21l-4-4Zm4-4 2 2m1-5 2 2m1-5 2 2" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></symbol>
+  <symbol id="i-close" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></symbol>
+  <symbol id="i-pin" viewBox="0 0 24 24"><path d="M12 22s7-6.2 7-12a7 7 0 1 0-14 0c0 5.8 7 12 7 12Z" fill="currentColor"/><circle cx="12" cy="10" r="2.6" fill="#fff"/></symbol>
+</svg>
+
+<header id="gv-barra" class="gv-vidrio-oscuro">
+  <div class="gv-marca">
+    <span class="gv-logo"><svg><use href="#i-pin"/></svg></span>
+    <div class="gv-marca-textos">
+      <h1><span class="gv-titulo-largo">Geovisualizador Urbano </span><span class="gv-degradado">Buenavista</span></h1>
+      <p>Pasaje, El Oro &middot; WGS 84 / UTM 17S</p>
+    </div>
+  </div>
+
+  <nav class="gv-segmentado gv-segmentado-oscuro" id="gv-temas" aria-label="Tema del mapa">
+    <button type="button" data-tema="edificaciones" aria-pressed="true">Edificaciones</button>
+    <button type="button" data-tema="uso" aria-pressed="false">Uso del suelo</button>
+    <button type="button" data-tema="inundacion" aria-pressed="false">Inundación</button>
+    <button type="button" data-tema="manzanas" aria-pressed="false">Manzanas</button>
+  </nav>
+
+  <div class="gv-acciones">
+    <button type="button" class="gv-boton-icono" id="gv-btn-indicadores" aria-pressed="true" title="Indicadores">
+      <svg><use href="#i-chart"/></svg><span>Indicadores</span>
+    </button>
+    <button type="button" class="gv-boton-icono" id="gv-btn-capas" aria-pressed="false" title="Capas y leyenda">
+      <svg><use href="#i-layers"/></svg><span>Capas</span>
+    </button>
+  </div>
+</header>
+
+<aside id="gv-indicadores" class="gv-panel gv-vidrio" aria-label="Tablero de indicadores">
+  <div class="gv-panel-cabecera">
+    <div>
+      <p class="gv-sobretitulo">Tablero de indicadores</p>
+      <h2 id="gv-titulo-sector">Sector Buenavista</h2>
+      <p class="gv-meta" id="gv-meta-sector"></p>
+    </div>
+    <button type="button" class="gv-cerrar" data-cierra="indicadores" aria-label="Cerrar"><svg><use href="#i-close"/></svg></button>
+  </div>
+  <nav class="gv-segmentado" id="gv-pestanas" aria-label="Secciones">
+    <button type="button" data-pestana="resumen" aria-pressed="true">Resumen</button>
+    <button type="button" data-pestana="suelo" aria-pressed="false">Suelo</button>
+    <button type="button" data-pestana="acceso" aria-pressed="false">Acceso</button>
+    <button type="button" data-pestana="riesgo" aria-pressed="false">Riesgo</button>
+  </nav>
+  <div class="gv-panel-cuerpo" id="gv-contenido"></div>
+</aside>
+
+<aside id="gv-capas" class="gv-panel gv-vidrio" aria-label="Capas y leyenda" hidden>
+  <div class="gv-panel-cabecera">
+    <div>
+      <p class="gv-sobretitulo">Mapa</p>
+      <h2>Capas y leyenda</h2>
+    </div>
+    <button type="button" class="gv-cerrar" data-cierra="capas" aria-label="Cerrar"><svg><use href="#i-close"/></svg></button>
+  </div>
+  <div class="gv-panel-cuerpo">
+    <p class="gv-etiqueta-grupo">Mapa base</p>
+    <nav class="gv-segmentado" id="gv-base" aria-label="Mapa base">
+      <button type="button" data-base="satelite" aria-pressed="true">Satélite</button>
+      <button type="button" data-base="calles" aria-pressed="false">Calles</button>
+    </nav>
+    <p class="gv-etiqueta-grupo">Capas de referencia</p>
+    <div class="gv-lista" id="gv-interruptores"></div>
+    <p class="gv-etiqueta-grupo">Leyenda &middot; <span id="gv-leyenda-titulo"></span></p>
+    <div class="gv-lista gv-leyenda" id="gv-leyenda"></div>
+  </div>
+</aside>
+
+<div id="gv-controles" class="gv-vidrio gv-pastilla" role="group" aria-label="Controles del mapa">
+  <button type="button" id="gv-zoom-mas" title="Acercar"><svg><use href="#i-plus"/></svg></button>
+  <button type="button" id="gv-zoom-menos" title="Alejar"><svg><use href="#i-minus"/></svg></button>
+  <span class="gv-separador"></span>
+  <button type="button" id="gv-inicio" title="Ver toda el área de estudio"><svg><use href="#i-home"/></svg></button>
+  <button type="button" id="gv-medir" title="Medir distancias y áreas" aria-pressed="false"><svg><use href="#i-ruler"/></svg></button>
+</div>
+
+        <div id="map">
+            <div id="popup" class="ol-popup">
+                <a href="#" id="popup-closer" class="ol-popup-closer"></a>
+                <div id="popup-content"></div>
+            </div>
+        </div>
+        <script src="resources/qgis2web_expressions.js"></script>
+        <script src="./resources/functions.js"></script>
+        <script src="./resources/ol.js"></script>
+        <script src="./resources/ol-layerswitcher.js"></script>
+        <script src="resources/photon-geocoder-autocomplete.min.js"></script>
+        <script src="layers/Usodelsuelo_2.js"></script><script src="layers/Susceptibilidadainundacin_3.js"></script><script src="layers/Coberturasalud600m_4.js"></script><script src="layers/Coberturaeducacin300m_5.js"></script><script src="layers/Manzanas_6.js"></script><script src="layers/Edificaciones_7.js"></script><script src="layers/Hidrografa_8.js"></script><script src="layers/Redvial_9.js"></script><script src="layers/Lmitedeestudio_10.js"></script><script src="layers/Equipamientos_11.js"></script>
+        <script src="styles/Usodelsuelo_2_style.js"></script><script src="styles/Susceptibilidadainundacin_3_style.js"></script><script src="styles/Coberturasalud600m_4_style.js"></script><script src="styles/Coberturaeducacin300m_5_style.js"></script><script src="styles/Manzanas_6_style.js"></script><script src="styles/Edificaciones_7_style.js"></script><script src="styles/Hidrografa_8_style.js"></script><script src="styles/Redvial_9_style.js"></script><script src="styles/Lmitedeestudio_10_style.js"></script><script src="styles/Equipamientos_11_style.js"></script>
+        <script src="./layers/layers.js" type="text/javascript"></script> 
+        <script src="./resources/Autolinker.min.js"></script>
+        <script src="./resources/qgis2web.js"></script>        
+            <script src="./resources/indicadores.js"></script>
+        <script src="./resources/geovisualizador.js"></script>
+</body>
+</html>
