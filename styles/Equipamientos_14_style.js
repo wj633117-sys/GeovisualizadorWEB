@@ -1,6 +1,6 @@
 var size = 0;
 var placement = 'point';
-function categories_Equipamientos_11(feature, value, size, resolution, labelText,
+function categories_Equipamientos_14(feature, value, size, resolution, labelText,
                        labelFont, labelFill, bufferColor, bufferWidth,
                        placement) {
                 var valueStr = (value !== null && value !== undefined) ? value.toString() : 'default';
@@ -73,7 +73,7 @@ case 'Cementerio':
     })];
                     break;}};
 
-var style_Equipamientos_11 = function(feature, resolution){
+var style_Equipamientos_14 = function(feature, resolution){
     var context = {
         feature: feature,
         variables: {}
@@ -93,7 +93,7 @@ var style_Equipamientos_11 = function(feature, resolution){
         labelText = String(feature.get("nombre"));
     }
     
-    var style = categories_Equipamientos_11(feature, value, size, resolution, labelText,
+    var style = categories_Equipamientos_14(feature, value, size, resolution, labelText,
                             labelFont, labelFill, bufferColor,
                             bufferWidth, placement);
 

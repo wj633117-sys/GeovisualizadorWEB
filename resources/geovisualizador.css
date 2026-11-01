@@ -176,7 +176,7 @@ svg { display: block; }
   box-shadow: 0 3px 8px rgba(0, 0, 0, 0.12), 0 0 0 0.5px rgba(0, 0, 0, 0.04);
 }
 .gv-segmentado-oscuro { background: rgba(118, 118, 128, 0.24); }
-.gv-segmentado-oscuro button { color: var(--gv-oscuro-texto-2); }
+.gv-segmentado-oscuro button { color: var(--gv-oscuro-texto-2); padding: 0 10px; }
 .gv-segmentado-oscuro button[aria-pressed="true"] { background: #636366; color: #fff; box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3); }
 .gv-segmentado-oscuro button:not([aria-pressed="true"]):hover { color: var(--gv-oscuro-texto); }
 
@@ -316,6 +316,7 @@ body.gv-sin-transicion .gv-panel, body.gv-sin-transicion .gv-pastilla, body.gv-s
 .gv-leyenda { padding: 6px 0; }
 .gv-leyenda div { display: flex; align-items: center; gap: 10px; padding: 5px 12px; font-size: 12.5px; }
 .gv-leyenda img { width: 18px; height: 18px; object-fit: contain; flex-shrink: 0; }
+.gv-muestra { display: block; width: 18px; height: 18px; border-radius: 4px; flex-shrink: 0; }
 
 /* ---------- Controles del mapa ---------- */
 .gv-pastilla {
@@ -416,7 +417,7 @@ body.gv-indicadores-abierto .ol-scale-line { left: calc(var(--gv-margen) * 2 + v
 @media (max-width: 720px) {
   :root { --gv-margen: 8px; --gv-barra-alto: 104px; }
   #gv-barra { grid-template-columns: 1fr auto; grid-template-rows: 48px 44px; padding: 0 8px 0 10px; gap: 0 8px; }
-  #gv-temas { grid-column: 1 / -1; grid-row: 2; justify-self: stretch; }
+  #gv-temas { grid-column: 1 / -1; grid-row: 2; justify-self: stretch; overflow-x: auto; }
   #gv-temas button { padding: 0 6px; font-size: 12px; }
   .gv-logo { width: 30px; height: 30px; }
   .gv-marca h1 { font-size: 17px; }

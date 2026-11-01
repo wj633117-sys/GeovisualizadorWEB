@@ -1,6 +1,6 @@
 var size = 0;
 var placement = 'point';
-function categories_Edificaciones_7(feature, value, size, resolution, labelText,
+function categories_Edificaciones_10(feature, value, size, resolution, labelText,
                        labelFont, labelFill, bufferColor, bufferWidth,
                        placement) {
                 var valueStr = (value !== null && value !== undefined) ? value.toString() : 'default';
@@ -77,7 +77,7 @@ case 'Equipamiento: Comercio y servicios':
     })];
                     break;}};
 
-var style_Edificaciones_7 = function(feature, resolution){
+var style_Edificaciones_10 = function(feature, resolution){
     var context = {
         feature: feature,
         variables: {}
@@ -97,7 +97,7 @@ var style_Edificaciones_7 = function(feature, resolution){
         labelText = String("");
     }
     
-    var style = categories_Edificaciones_7(feature, value, size, resolution, labelText,
+    var style = categories_Edificaciones_10(feature, value, size, resolution, labelText,
                             labelFont, labelFill, bufferColor,
                             bufferWidth, placement);
 

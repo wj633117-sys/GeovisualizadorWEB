@@ -76,15 +76,75 @@ window.INDICADORES = {
  "pct_tierra": 12.03,
  "edu": {
   "radio": 300,
-  "pct": 53.75,
-  "viv": 766,
-  "n": 2
+  "pct": 53.82,
+  "viv": 767,
+  "n": 2,
+  "dist_media": 294
  },
  "salud": {
   "radio": 600,
-  "pct": 88.14,
-  "viv": 1256,
-  "n": 1
+  "pct": 0.0,
+  "viv": 0,
+  "dist_media": 1659,
+  "dist_min": 973,
+  "centro": "Centro de Salud La Victoria",
+  "farmacia_pct": 88.14
+ },
+ "cuenca": {
+  "x_salida": 627305.0,
+  "y_salida": 9627875.0,
+  "area_km2": 248.428,
+  "perimetro_km": 94.685,
+  "long_cauce_km": 40.085,
+  "cota_max": 3580.4,
+  "cota_min": 17.4,
+  "cota_media": 1025.7,
+  "desnivel_m": 3563.0,
+  "pendiente_media_pct": 43.3,
+  "pendiente_cauce_pct": 8.889,
+  "Kc": 1.694,
+  "factor_forma": 0.155,
+  "densidad_drenaje": 0.745,
+  "long_red_km": 185.1,
+  "tc_horas": 2.89,
+  "umbral_red_km2": 1.0,
+  "hipsometria": {
+   "10": 134.7,
+   "25": 438.3,
+   "50": 957.2,
+   "75": 1504.8,
+   "90": 2024.2
+  }
+ },
+ "clasif": {
+  "exactitud_pct": 79.13,
+  "kappa": 0.677,
+  "areas_ha": {
+   "Construido": 36.03,
+   "Vegetación densa": 19.87,
+   "Vegetación baja": 9.01,
+   "Suelo desnudo": 36.88,
+   "Agua": 4.26
+  },
+  "clases": [
+   "Construido",
+   "Vegetación densa",
+   "Vegetación baja",
+   "Suelo desnudo",
+   "Agua"
+  ],
+  "escena": {
+   "id": "S2C_17MPS_20260808_0_L2A",
+   "fecha": "2026-08-08",
+   "nubes_escena_pct": 43.454263,
+   "nubes_ventana_pct": 0.0,
+   "ventana": [
+    627080,
+    9626990,
+    629500,
+    9629250
+   ]
+  }
  },
  "verde": {
   "m2": 19345,

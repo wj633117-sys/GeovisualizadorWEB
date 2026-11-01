@@ -28,7 +28,9 @@
     edificaciones: { capa: "Edificaciones", titulo: "Edificaciones por uso" },
     uso: { capa: "Uso del suelo", titulo: "Uso del suelo" },
     inundacion: { capa: "Susceptibilidad a inundación", titulo: "Susceptibilidad a inundación" },
-    manzanas: { capa: "Manzanas", titulo: "Densidad de viviendas por manzana" }
+    manzanas: { capa: "Manzanas", titulo: "Densidad de viviendas por manzana" },
+    cobertura: { capa: "Cobertura Sentinel-2", titulo: "Cobertura (Sentinel-2)", leyenda: [["#7f7f7f", "Construido"], ["#006D2C", "Vegetación densa"], ["#A6D96A", "Vegetación baja"], ["#D8B365", "Suelo desnudo"], ["#2B8CBE", "Agua"]] },
+    cuenca: { capa: "Cuenca del río Buenavista", titulo: "Cuenca del río Buenavista", extra: "Red de drenaje", encuadre: true }
   };
   var REFERENCIA = ["Equipamientos", "Red vial", "Hidrografía", "Límite de estudio",
                     "Cobertura educación (300 m)", "Cobertura salud (600 m)"];
@@ -60,15 +62,27 @@
   }
 
   /* ---------- Temas del mapa ---------- */
+  var temaEnCuenca = false;
+  var vista = map.getView();
   function aplicarTema(tema) {
     Object.keys(TEMAS).forEach(function (k) {
       var c = capas[TEMAS[k].capa];
       if (c) c.setVisible(k === tema);
+      if (TEMAS[k].extra && capas[TEMAS[k].extra]) capas[TEMAS[k].extra].setVisible(k === tema);
     });
+    if (TEMAS[tema].encuadre) {
+      vista.fit(capas[TEMAS[tema].capa].getSource().getExtent(), { padding: [100, 80, 40, 420], duration: 500 });
+      temaEnCuenca = true;
+    } else if (temaEnCuenca) {
+      temaEnCuenca = false;
+      encuadrar(500);
+    }
     seleccionar("#gv-temas", $('#gv-temas [data-tema="' + tema + '"]'));
     var c = capas[TEMAS[tema].capa];
     $("#gv-leyenda-titulo").textContent = TEMAS[tema].titulo;
-    $("#gv-leyenda").innerHTML = (c ? leyendaDe(c) : []).map(function (it) {
+    $("#gv-leyenda").innerHTML = TEMAS[tema].leyenda ? TEMAS[tema].leyenda.map(function (it) {
+      return '<div><i class="gv-muestra" style="background:' + it[0] + '"></i><span>' + it[1] + "</span></div>";
+    }).join("") : (c ? leyendaDe(c) : []).map(function (it) {
       return '<div><img src="' + it.img + '" alt=""><span>' + it.texto + "</span></div>";
     }).join("");
   }
@@ -105,7 +119,6 @@
   });
 
   /* ---------- Controles del mapa ---------- */
-  var vista = map.getView();
   function zoom(delta) { vista.animate({ zoom: vista.getZoom() + delta, duration: 250 }); }
   $("#gv-zoom-mas").addEventListener("click", function () { zoom(1); });
   $("#gv-zoom-menos").addEventListener("click", function () { zoom(-1); });
@@ -186,15 +199,20 @@
         fila("Mixto (vivienda y comercio)", num(e["Mixto (vivienda y comercio)"] || 0)) +
         fila("Comercial / galpón", num(e["Comercial / galpón"] || 0)) +
         fila("Red vial total", num(D.km_total, 1) + " km") +
-        fila("Calles y caminos de tierra", num(D.km_tierra, 1) + " km · " + num(D.pct_tierra, 0) + " %") + "</div>";
+        fila("Calles y caminos de tierra", num(D.km_tierra, 1) + " km · " + num(D.pct_tierra, 0) + " %") + "</div>" +
+        '<div class="gv-tarjeta"><h3><i class="gv-punto-titulo" style="background:#006D2C"></i>Clasificación Sentinel-2</h3>' +
+        fila("Exactitud global", num(D.clasif.exactitud_pct, 1) + " %") + fila("Índice kappa", num(D.clasif.kappa, 2)) +
+        D.clasif.clases.map(function (k) { return fila(k, num(D.clasif.areas_ha[k], 1) + " ha"); }).join("") +
+        '<p class="gv-nota">Imagen del ' + D.clasif.escena.fecha + ", máxima verosimilitud; validada con bloques separados de 200 m.</p></div>";
     },
     acceso: function () {
       return '<div class="gv-tarjeta"><h3><i class="gv-punto-titulo" style="background:var(--gv-azul)"></i>Accesibilidad a equipamientos</h3>' +
         barra("Educación · radio " + D.edu.radio + " m", D.edu.pct, "var(--gv-azul)",
               num(D.edu.viv) + " de " + num(D.viviendas) + " viviendas · " + D.edu.n + " establecimientos") +
-        barra("Salud · radio " + D.salud.radio + " m", D.salud.pct, "var(--gv-verde)",
-              num(D.salud.viv) + " de " + num(D.viviendas) + " viviendas · " + D.salud.n + " punto(s)") +
-        (D.salud.n <= 1 ? '<p class="gv-nota">OSM registra un solo punto de salud (farmacia). Si existe subcentro de salud, agregarlo para un indicador real.</p>' : "") +
+        barra("Centro de salud · radio " + D.salud.radio + " m", D.salud.pct, "var(--gv-verde)",
+              D.salud.centro + " · a " + num(D.salud.dist_media / 1000, 2) + " km en promedio (mínimo " + num(D.salud.dist_min) + " m)") +
+        barra("Farmacia · radio " + D.salud.radio + " m", D.salud.farmacia_pct, "#CC79A7", "Único punto de salud dentro del sector") +
+        '<p class="gv-nota">Dentro del sector no hay centro de salud registrado en OpenStreetMap: el más cercano está en La Victoria.</p>' +
         "</div>" +
         '<div class="gv-tarjeta"><h3><i class="gv-punto-titulo" style="background:var(--gv-verde)"></i>Área verde por habitante</h3>' +
         '<div class="gv-dato-grande"><b>' + num(V.m2_hab, 2) + "</b><span>m² / hab</span></div>" +
@@ -217,7 +235,13 @@
         fila("Equipamientos en susceptibilidad alta", R.equip_alta.length + " de " + R.n_equip) +
         '<div class="gv-etiquetas">' + R.equip_alta.map(function (e) { return "<span>" + e + "</span>"; }).join("") + "</div>" +
         '<p class="gv-nota">Alta: terreno a ≤ 2 m sobre el cauce del río Buenavista; media: 2–4 m; baja: &gt; 4 m. ' +
-        "Calculado con el MDE Copernicus de 30 m: es una <strong>susceptibilidad aproximada</strong>, no una cota exacta.</p></div>";
+        "Calculado con el MDE Copernicus de 30 m: es una <strong>susceptibilidad aproximada</strong>, no una cota exacta.</p></div>" +
+        '<div class="gv-tarjeta"><h3><i class="gv-punto-titulo" style="background:#2B8CBE"></i>Cuenca del río Buenavista</h3>' +
+        fila("Área", num(D.cuenca.area_km2, 1) + " km²") + fila("Longitud del cauce", num(D.cuenca.long_cauce_km, 1) + " km") +
+        fila("Cota máxima / salida", num(D.cuenca.cota_max) + " / " + num(D.cuenca.cota_min) + " msnm") +
+        fila("Compacidad (Kc)", num(D.cuenca.Kc, 2)) + fila("Factor de forma", num(D.cuenca.factor_forma, 2)) +
+        fila("Tiempo de concentración", num(D.cuenca.tc_horas, 1) + " h") +
+        '<p class="gv-nota">Cuenca alargada y de montaña: la crecida baja rápido desde la cordillera y llega al tramo plano donde está Buenavista.</p></div>';
     }
   };
   var TEMA_DE_PESTANA = { resumen: "edificaciones", suelo: "uso", acceso: "edificaciones", riesgo: "inundacion" };

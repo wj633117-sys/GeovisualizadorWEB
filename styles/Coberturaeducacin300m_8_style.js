@@ -1,7 +1,7 @@
 var size = 0;
 var placement = 'point';
 
-var style_Hidrografa_8 = function(feature, resolution){
+var style_Coberturaeducacin300m_8 = function(feature, resolution){
     var context = {
         feature: feature,
         variables: {}
@@ -9,19 +9,19 @@ var style_Hidrografa_8 = function(feature, resolution){
     
     var labelText = ""; 
     var value = feature.get("");
-    var labelFont = "10.4px \'Arial\', sans-serif";
-    var labelFill = "#1f6fa3";
-    var bufferColor = "#ffffff";
-    var bufferWidth = 2.4000000000000004;
+    var labelFont = "10px, sans-serif";
+    var labelFill = "#000000";
+    var bufferColor = "";
+    var bufferWidth = 0;
     var textAlign = "left";
     var offsetX = 0;
     var offsetY = 0;
-    var placement = 'line';
-    if (feature.get("nombre") !== null) {
-        labelText = String(feature.get("nombre"));
+    var placement = 'point';
+    if ("" !== null) {
+        labelText = String("");
     }
     var style = [ new ol.style.Style({
-        stroke: new ol.style.Stroke({color: 'rgba(31,111,163,1.0)', lineDash: null, lineCap: 'square', lineJoin: 'bevel', width: 3.42}),
+        stroke: new ol.style.Stroke({color: 'rgba(0,114,178,1.0)', lineDash: [9.5,1.9], lineCap: 'butt', lineJoin: 'miter', width: 1.9}),fill: new ol.style.Fill({color: 'rgba(0,114,178,0.27450980392156865)'}),
         text: createTextStyle(feature, resolution, labelText, labelFont,
                               labelFill, placement, bufferColor,
                               bufferWidth)

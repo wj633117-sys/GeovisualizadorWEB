@@ -1,6 +1,6 @@
 var size = 0;
 var placement = 'point';
-function categories_Susceptibilidadainundacin_3(feature, value, size, resolution, labelText,
+function categories_Susceptibilidadainundacin_6(feature, value, size, resolution, labelText,
                        labelFont, labelFill, bufferColor, bufferWidth,
                        placement) {
                 var valueStr = (value !== null && value !== undefined) ? value.toString() : 'default';
@@ -29,7 +29,7 @@ case 'Baja':
     })];
                     break;}};
 
-var style_Susceptibilidadainundacin_3 = function(feature, resolution){
+var style_Susceptibilidadainundacin_6 = function(feature, resolution){
     var context = {
         feature: feature,
         variables: {}
@@ -49,7 +49,7 @@ var style_Susceptibilidadainundacin_3 = function(feature, resolution){
         labelText = String("");
     }
     
-    var style = categories_Susceptibilidadainundacin_3(feature, value, size, resolution, labelText,
+    var style = categories_Susceptibilidadainundacin_6(feature, value, size, resolution, labelText,
                             labelFont, labelFill, bufferColor,
                             bufferWidth, placement);
 

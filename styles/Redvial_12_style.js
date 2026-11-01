@@ -1,6 +1,6 @@
 var size = 0;
 var placement = 'point';
-function categories_Redvial_9(feature, value, size, resolution, labelText,
+function categories_Redvial_12(feature, value, size, resolution, labelText,
                        labelFont, labelFill, bufferColor, bufferWidth,
                        placement) {
                 var valueStr = (value !== null && value !== undefined) ? value.toString() : 'default';
@@ -53,7 +53,7 @@ case 'Peatonal':
     })];
                     break;}};
 
-var style_Redvial_9 = function(feature, resolution){
+var style_Redvial_12 = function(feature, resolution){
     var context = {
         feature: feature,
         variables: {}
@@ -73,7 +73,7 @@ var style_Redvial_9 = function(feature, resolution){
         labelText = String(feature.get("nombre"));
     }
     
-    var style = categories_Redvial_9(feature, value, size, resolution, labelText,
+    var style = categories_Redvial_12(feature, value, size, resolution, labelText,
                             labelFont, labelFill, bufferColor,
                             bufferWidth, placement);
 
