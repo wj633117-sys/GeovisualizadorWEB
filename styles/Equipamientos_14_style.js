@@ -6,7 +6,7 @@ function categories_Equipamientos_14(feature, value, size, resolution, labelText
                 var valueStr = (value !== null && value !== undefined) ? value.toString() : 'default';
                 switch(valueStr) {case 'Educación':
                     return [ new ol.style.Style({
-        image: new ol.style.RegularShape({radius: 6.0 + size, points: 4,
+        image: new ol.style.RegularShape({declutterMode: 'none', radius: 6.0 + size, points: 4,
             angle: Math.PI/4, displacement: [0, 0], stroke: new ol.style.Stroke({color: 'rgba(255,255,255,1.0)', lineDash: null, lineCap: 'butt', lineJoin: 'miter', width: 0.0}), fill: new ol.style.Fill({color: 'rgba(0,114,178,1.0)'})}),
         text: createTextStyle(feature, resolution, labelText, labelFont,
                               labelFill, placement, bufferColor,
@@ -15,7 +15,7 @@ function categories_Equipamientos_14(feature, value, size, resolution, labelText
                     break;
 case 'Salud':
                     return [ new ol.style.Style({
-        image: new ol.style.Circle({radius: 6.8 + size,
+        image: new ol.style.Circle({declutterMode: 'none', radius: 6.8 + size,
             displacement: [0, 0], stroke: new ol.style.Stroke({color: 'rgba(255,255,255,1.0)', lineDash: null, lineCap: 'butt', lineJoin: 'miter', width: 0.0}), fill: new ol.style.Fill({color: 'rgba(213,94,0,1.0)'})}),
         text: createTextStyle(feature, resolution, labelText, labelFont,
                               labelFill, placement, bufferColor,
@@ -24,7 +24,7 @@ case 'Salud':
                     break;
 case 'Culto':
                     return [ new ol.style.Style({
-        image: new ol.style.RegularShape({radius: 6.0 + size, points: 3,
+        image: new ol.style.RegularShape({declutterMode: 'none', radius: 6.0 + size, points: 3,
             displacement: [0, 0], stroke: new ol.style.Stroke({color: 'rgba(255,255,255,1.0)', lineDash: null, lineCap: 'butt', lineJoin: 'miter', width: 0.0}), fill: new ol.style.Fill({color: 'rgba(106,61,154,1.0)'})}),
         text: createTextStyle(feature, resolution, labelText, labelFont,
                               labelFill, placement, bufferColor,
@@ -33,7 +33,7 @@ case 'Culto':
                     break;
 case 'Seguridad':
                     return [ new ol.style.Style({
-        image: new ol.style.RegularShape({radius: 6.0 + size, points: 4,
+        image: new ol.style.RegularShape({declutterMode: 'none', radius: 6.0 + size, points: 4,
             displacement: [0, 0], stroke: new ol.style.Stroke({color: 'rgba(255,255,255,1.0)', lineDash: null, lineCap: 'butt', lineJoin: 'miter', width: 0.0}), fill: new ol.style.Fill({color: 'rgba(0,0,0,1.0)'})}),
         text: createTextStyle(feature, resolution, labelText, labelFont,
                               labelFill, placement, bufferColor,
@@ -42,7 +42,7 @@ case 'Seguridad':
                     break;
 case 'Recreación':
                     return [ new ol.style.Style({
-        image: new ol.style.Circle({radius: 5.6 + size,
+        image: new ol.style.Circle({declutterMode: 'none', radius: 5.6 + size,
             displacement: [0, 0], stroke: new ol.style.Stroke({color: 'rgba(255,255,255,1.0)', lineDash: null, lineCap: 'butt', lineJoin: 'miter', width: 0.0}), fill: new ol.style.Fill({color: 'rgba(0,158,115,1.0)'})}),
         text: createTextStyle(feature, resolution, labelText, labelFont,
                               labelFill, placement, bufferColor,
@@ -51,7 +51,7 @@ case 'Recreación':
                     break;
 case 'Comercio y servicios':
                     return [ new ol.style.Style({
-        image: new ol.style.Circle({radius: 4.8 + size,
+        image: new ol.style.Circle({declutterMode: 'none', radius: 4.8 + size,
             displacement: [0, 0], stroke: new ol.style.Stroke({color: 'rgba(255,255,255,1.0)', lineDash: null, lineCap: 'butt', lineJoin: 'miter', width: 0.0}), fill: new ol.style.Fill({color: 'rgba(153,153,153,1.0)'})}),
         text: createTextStyle(feature, resolution, labelText, labelFont,
                               labelFill, placement, bufferColor,
@@ -60,7 +60,7 @@ case 'Comercio y servicios':
                     break;
 case 'Cementerio':
                     return [ new ol.style.Style({
-        image: new ol.style.RegularShape({radius: 6.0 + size,
+        image: new ol.style.RegularShape({declutterMode: 'none', radius: 6.0 + size,
                                           points: 4,
                                           radius2: 0,
                                           angle: Math.PI / 4,

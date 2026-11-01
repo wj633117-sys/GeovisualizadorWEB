@@ -124,7 +124,7 @@ var lyr_Coberturasalud600m_7 = new ol.layer.Vector({
                 source:jsonSource_Coberturasalud600m_7, 
                 style: style_Coberturasalud600m_7,
                 popuplayertitle: 'Cobertura salud (600 m)',
-                interactive: true,
+                interactive: false,
     title: 'Cobertura salud (600 m)<br />\
     <img src="styles/legend/Coberturasalud600m_7_0.png" /> Centro de salud a 600 m<br />\
     <img src="styles/legend/Coberturasalud600m_7_1.png" /> Farmacia a 600 m<br />' });
@@ -140,7 +140,7 @@ var lyr_Coberturaeducacin300m_8 = new ol.layer.Vector({
                 source:jsonSource_Coberturaeducacin300m_8, 
                 style: style_Coberturaeducacin300m_8,
                 popuplayertitle: 'Cobertura educación (300 m)',
-                interactive: true,
+                interactive: false,
                 title: '<img src="styles/legend/Coberturaeducacin300m_8.png" /> Cobertura educación (300 m)'
             });
 var format_Manzanas_9 = new ol.format.GeoJSON();
@@ -193,7 +193,7 @@ var jsonSource_Hidrografa_11 = new ol.source.Vector({
 });
 jsonSource_Hidrografa_11.addFeatures(features_Hidrografa_11);
 var lyr_Hidrografa_11 = new ol.layer.Vector({
-                declutter: false,
+                declutter: 'etiquetas',
                 source:jsonSource_Hidrografa_11, 
                 style: style_Hidrografa_11,
                 popuplayertitle: 'Hidrografía',
@@ -208,7 +208,7 @@ var jsonSource_Redvial_12 = new ol.source.Vector({
 });
 jsonSource_Redvial_12.addFeatures(features_Redvial_12);
 var lyr_Redvial_12 = new ol.layer.Vector({
-                declutter: false,
+                declutter: 'etiquetas',
                 source:jsonSource_Redvial_12, 
                 style: style_Redvial_12,
                 popuplayertitle: 'Red vial',
@@ -243,7 +243,7 @@ var jsonSource_Equipamientos_14 = new ol.source.Vector({
 });
 jsonSource_Equipamientos_14.addFeatures(features_Equipamientos_14);
 var lyr_Equipamientos_14 = new ol.layer.Vector({
-                declutter: false,
+                declutter: 'etiquetas',
                 source:jsonSource_Equipamientos_14, 
                 style: style_Equipamientos_14,
                 popuplayertitle: 'Equipamientos',
@@ -283,18 +283,18 @@ lyr_Hidrografa_11.set('fieldImages', {'fid': '', 'nombre': '', 'tipo': '', 'long
 lyr_Redvial_12.set('fieldImages', {'fid': '', 'nombre': '', 'tipo': '', 'ancho_m': '', 'long_m': '', 'fuente': '', });
 lyr_Lmitedeestudio_13.set('fieldImages', {'fid': '', 'nombre': '', 'parroquia': '', 'canton': '', 'area_m2': '', 'area_ha': '', });
 lyr_Equipamientos_14.set('fieldImages', {'fid': '', 'nombre': '', 'tipo': '', 'subtipo': '', 'fuente': '', 'riesgo': '', });
-lyr_CuencadelroBuenavista_2.set('fieldLabels', {'fid': 'hidden field', 'nombre': 'inline label - always visible', 'area_km2': 'inline label - always visible', 'perim_km': 'inline label - always visible', 'long_cauce_km': 'inline label - always visible', 'cota_max': 'inline label - always visible', 'cota_min': 'inline label - always visible', 'cota_media': 'inline label - always visible', 'pend_media_pct': 'inline label - always visible', 'kc': 'inline label - always visible', 'factor_forma': 'inline label - always visible', 'dens_drenaje': 'inline label - always visible', 'tc_horas': 'inline label - always visible', });
+lyr_CuencadelroBuenavista_2.set('fieldLabels', {'fid': 'hidden field', 'nombre': 'inline label - visible with data', 'area_km2': 'inline label - visible with data', 'perim_km': 'inline label - visible with data', 'long_cauce_km': 'inline label - visible with data', 'cota_max': 'inline label - visible with data', 'cota_min': 'inline label - visible with data', 'cota_media': 'inline label - visible with data', 'pend_media_pct': 'inline label - visible with data', 'kc': 'inline label - visible with data', 'factor_forma': 'inline label - visible with data', 'dens_drenaje': 'inline label - visible with data', 'tc_horas': 'inline label - visible with data', });
 lyr_Reddedrenaje_3.set('fieldLabels', {'fid': 'hidden field', 'fuente': 'hidden field', });
-lyr_Usodelsuelo_5.set('fieldLabels', {'fid': 'hidden field', 'categoria': 'inline label - always visible', 'area_m2': 'inline label - always visible', 'porc': 'inline label - always visible', 'criterio': 'hidden field', });
-lyr_Susceptibilidadainundacin_6.set('fieldLabels', {'fid': 'hidden field', 'nivel': 'inline label - always visible', 'orden': 'hidden field', 'descripcion': 'inline label - always visible', 'area_m2': 'inline label - always visible', 'porc': 'inline label - always visible', 'metodo': 'hidden field', });
-lyr_Coberturasalud600m_7.set('fieldLabels', {'fid': 'hidden field', 'cobertura': 'inline label - always visible', 'radio_m': 'inline label - always visible', 'puntos': 'inline label - always visible', });
-lyr_Coberturaeducacin300m_8.set('fieldLabels', {'fid': 'hidden field', 'cobertura': 'inline label - always visible', 'radio_m': 'inline label - always visible', 'puntos': 'inline label - always visible', });
-lyr_Manzanas_9.set('fieldLabels', {'fid': 'hidden field', 'id_manzana': 'inline label - always visible', 'area_m2': 'inline label - always visible', 'perim_m': 'hidden field', 'estado': 'hidden field', 'riesgo': 'inline label - always visible', 'n_edif': 'inline label - always visible', 'viviendas': 'inline label - always visible', 'poblacion': 'inline label - always visible', 'dens_viv_ha': 'inline label - always visible', 'construido_pct': 'inline label - always visible', 'uso_predom': 'inline label - always visible', 'dist_edu_m': 'inline label - always visible', 'dist_salud_m': 'inline label - always visible', });
-lyr_Edificaciones_10.set('fieldLabels', {'fid': 'hidden field', 'id_edif': 'hidden field', 'uso': 'inline label - always visible', 'area_m2': 'inline label - always visible', 'id_manzana': 'inline label - always visible', 'fuente': 'hidden field', 'criterio': 'hidden field', 'riesgo': 'inline label - always visible', });
-lyr_Hidrografa_11.set('fieldLabels', {'fid': 'hidden field', 'nombre': 'inline label - always visible', 'tipo': 'inline label - always visible', 'long_m': 'inline label - always visible', 'fuente': 'hidden field', });
-lyr_Redvial_12.set('fieldLabels', {'fid': 'hidden field', 'nombre': 'inline label - always visible', 'tipo': 'inline label - always visible', 'ancho_m': 'inline label - always visible', 'long_m': 'inline label - always visible', 'fuente': 'hidden field', });
-lyr_Lmitedeestudio_13.set('fieldLabels', {'fid': 'hidden field', 'nombre': 'inline label - always visible', 'parroquia': 'inline label - always visible', 'canton': 'inline label - always visible', 'area_m2': 'inline label - always visible', 'area_ha': 'inline label - always visible', });
-lyr_Equipamientos_14.set('fieldLabels', {'fid': 'hidden field', 'nombre': 'inline label - always visible', 'tipo': 'inline label - always visible', 'subtipo': 'inline label - always visible', 'fuente': 'hidden field', 'riesgo': 'inline label - always visible', });
+lyr_Usodelsuelo_5.set('fieldLabels', {'fid': 'hidden field', 'categoria': 'inline label - visible with data', 'area_m2': 'inline label - visible with data', 'porc': 'inline label - visible with data', 'criterio': 'hidden field', });
+lyr_Susceptibilidadainundacin_6.set('fieldLabels', {'fid': 'hidden field', 'nivel': 'inline label - visible with data', 'orden': 'hidden field', 'descripcion': 'inline label - visible with data', 'area_m2': 'inline label - visible with data', 'porc': 'inline label - visible with data', 'metodo': 'hidden field', });
+lyr_Coberturasalud600m_7.set('fieldLabels', {'fid': 'hidden field', 'cobertura': 'inline label - visible with data', 'radio_m': 'inline label - visible with data', 'puntos': 'inline label - visible with data', });
+lyr_Coberturaeducacin300m_8.set('fieldLabels', {'fid': 'hidden field', 'cobertura': 'inline label - visible with data', 'radio_m': 'inline label - visible with data', 'puntos': 'inline label - visible with data', });
+lyr_Manzanas_9.set('fieldLabels', {'fid': 'hidden field', 'id_manzana': 'inline label - visible with data', 'area_m2': 'inline label - visible with data', 'perim_m': 'hidden field', 'estado': 'hidden field', 'riesgo': 'inline label - visible with data', 'n_edif': 'inline label - visible with data', 'viviendas': 'inline label - visible with data', 'poblacion': 'inline label - visible with data', 'dens_viv_ha': 'inline label - visible with data', 'construido_pct': 'inline label - visible with data', 'uso_predom': 'inline label - visible with data', 'dist_edu_m': 'inline label - visible with data', 'dist_salud_m': 'inline label - visible with data', });
+lyr_Edificaciones_10.set('fieldLabels', {'fid': 'hidden field', 'id_edif': 'hidden field', 'uso': 'inline label - visible with data', 'area_m2': 'inline label - visible with data', 'id_manzana': 'inline label - visible with data', 'fuente': 'hidden field', 'criterio': 'hidden field', 'riesgo': 'inline label - visible with data', });
+lyr_Hidrografa_11.set('fieldLabels', {'fid': 'hidden field', 'nombre': 'inline label - visible with data', 'tipo': 'inline label - visible with data', 'long_m': 'inline label - visible with data', 'fuente': 'hidden field', });
+lyr_Redvial_12.set('fieldLabels', {'fid': 'hidden field', 'nombre': 'inline label - visible with data', 'tipo': 'inline label - visible with data', 'ancho_m': 'inline label - visible with data', 'long_m': 'inline label - visible with data', 'fuente': 'hidden field', });
+lyr_Lmitedeestudio_13.set('fieldLabels', {'fid': 'hidden field', 'nombre': 'inline label - visible with data', 'parroquia': 'inline label - visible with data', 'canton': 'inline label - visible with data', 'area_m2': 'inline label - visible with data', 'area_ha': 'inline label - visible with data', });
+lyr_Equipamientos_14.set('fieldLabels', {'fid': 'hidden field', 'nombre': 'inline label - visible with data', 'tipo': 'inline label - visible with data', 'subtipo': 'inline label - visible with data', 'fuente': 'hidden field', 'riesgo': 'inline label - visible with data', });
 lyr_Equipamientos_14.on('precompose', function(evt) {
     evt.context.globalCompositeOperation = 'normal';
 });

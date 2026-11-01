@@ -125,10 +125,17 @@
     <div class="gv-lista" id="gv-interruptores-tema"></div>
     <p class="gv-etiqueta-grupo">Capas de referencia</p>
     <div class="gv-lista" id="gv-interruptores"></div>
-    <p class="gv-etiqueta-grupo">Leyenda &middot; <span id="gv-leyenda-titulo"></span></p>
+    <p class="gv-etiqueta-grupo">Leyenda</p>
     <div class="gv-lista gv-leyenda" id="gv-leyenda"></div>
   </div>
 </aside>
+
+<div id="gv-medir-opciones" class="gv-vidrio" hidden>
+  <nav class="gv-segmentado" aria-label="Tipo de medición">
+    <button type="button" data-medida="LineString" aria-pressed="true">Distancia</button>
+    <button type="button" data-medida="Polygon" aria-pressed="false">Área</button>
+  </nav>
+</div>
 
 <div id="gv-controles" class="gv-vidrio gv-pastilla" role="group" aria-label="Controles del mapa">
   <button type="button" id="gv-zoom-mas" title="Acercar"><svg><use href="#i-plus"/></svg></button>

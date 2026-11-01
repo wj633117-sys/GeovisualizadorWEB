@@ -75,20 +75,40 @@
       if (TEMAS[k].extra && capas[TEMAS[k].extra]) capas[TEMAS[k].extra].setVisible(k === tema);
     });
     if (TEMAS[tema].encuadre) {
-      vista.fit(capas[TEMAS[tema].capa].getSource().getExtent(), { padding: [100, 80, 40, 420], duration: 500 });
+      vista.fit(capas[TEMAS[tema].capa].getSource().getExtent(), { padding: margenes(), duration: 500 });
       temaEnCuenca = true;
     } else if (temaEnCuenca) {
       temaEnCuenca = false;
       encuadrar(500);
     }
-    seleccionar("#gv-temas", $('#gv-temas [data-tema="' + tema + '"]'));
-    var c = capas[TEMAS[tema].capa];
-    $("#gv-leyenda-titulo").textContent = TEMAS[tema].titulo;
-    $("#gv-leyenda").innerHTML = TEMAS[tema].leyenda ? TEMAS[tema].leyenda.map(function (it) {
-      return '<div><i class="gv-muestra" style="background:' + it[0] + '"></i><span>' + it[1] + "</span></div>";
-    }).join("") : (c ? leyendaDe(c) : []).map(function (it) {
-      return '<div><img src="' + it.img + '" alt=""><span>' + it.texto + "</span></div>";
-    }).join("");
+  }
+
+  /* Leyenda de todo lo visible y tema marcado según lo que realmente se ve */
+  var sincronizacion = null;
+  function sincronizar() {
+    clearTimeout(sincronizacion);
+    sincronizacion = setTimeout(function () {
+      var activos = Object.keys(TEMAS).filter(function (k) { return capas[TEMAS[k].capa] && capas[TEMAS[k].capa].getVisible(); });
+      $$("#gv-temas button").forEach(function (b) {
+        b.setAttribute("aria-pressed", String(activos.length === 1 && b.dataset.tema === activos[0]));
+      });
+      var html = layersList.slice().reverse().filter(function (l) {
+        return l.getVisible() && leyendaDe(l).length;
+      }).map(function (l) {
+        var filas = leyendaDe(l).map(function (it) {
+          return '<div><img src="' + it.img + '" alt=""><span>' + it.texto + "</span></div>";
+        }).join("");
+        return leyendaDe(l).length > 1 ? '<p class="gv-leyenda-grupo">' + nombreCapa(l) + "</p>" + filas : filas;
+      }).join("");
+      $("#gv-leyenda").innerHTML = html || '<p class="gv-leyenda-vacia">Activa una capa para ver su leyenda.</p>';
+    }, 0);
+  }
+  layersList.forEach(function (l) {
+    l.on("change:visible", function () { sincronizar(); cerrarPopup(); });
+  });
+  function cerrarPopup() {
+    var p = $("#popup");
+    if (p && p.style.display !== "none") $("#popup-closer").click();
   }
   $$("#gv-temas button").forEach(function (b) {
     b.addEventListener("click", function () { aplicarTema(b.dataset.tema); });
@@ -131,14 +151,28 @@
   function zoom(delta) { vista.animate({ zoom: vista.getZoom() + delta, duration: 250 }); }
   $("#gv-zoom-mas").addEventListener("click", function () { zoom(1); });
   $("#gv-zoom-menos").addEventListener("click", function () { zoom(-1); });
+  function esMovil() { return window.matchMedia("(max-width: 720px)").matches; }
+  /* Área del mapa que no tapan la barra ni los paneles: [arriba, derecha, abajo, izquierda] */
+  function areaLibre() {
+    var ind = $("#gv-indicadores"), cap = $("#gv-capas"), tam = map.getSize();
+    var arriba = $("#gv-barra").getBoundingClientRect().bottom + 12, abajo = tam[1] - 12, izq = 12, der = tam[0] - 12;
+    if (esMovil()) {
+      [ind, cap].forEach(function (p) { if (!p.hidden) abajo = Math.min(abajo, p.getBoundingClientRect().top - 12); });
+    } else {
+      if (!ind.hidden) izq = ind.getBoundingClientRect().right + 12;
+      if (!cap.hidden) der = cap.getBoundingClientRect().left - 12;
+      else der = $("#gv-controles").getBoundingClientRect().left - 12;
+    }
+    return { arriba: arriba, abajo: abajo, izq: izq, der: der };
+  }
+  function margenes() {
+    var a = areaLibre(), tam = map.getSize();
+    return [a.arriba + 12, tam[0] - a.der + 12, tam[1] - a.abajo + 12, a.izq + 12];
+  }
   function encuadrar(duracion) {
     var lim = capas["Límite de estudio"];
     if (!lim) return;
-    var abierto = !$("#gv-indicadores").hidden && !window.matchMedia("(max-width: 720px)").matches;
-    var arriba = 12 * 2 + 60 + 24;
-    vista.fit(lim.getSource().getExtent(), {
-      padding: [arriba, 80, 40, abierto ? 368 + 48 : 40], duration: duracion || 0
-    });
+    vista.fit(lim.getSource().getExtent(), { padding: margenes(), duration: duracion || 0 });
   }
   $("#gv-inicio").addEventListener("click", function () { encuadrar(400); });
   $("#gv-medir").addEventListener("click", function () {
@@ -146,7 +180,17 @@
     if (original) original.click();
     var activo = this.getAttribute("aria-pressed") !== "true";
     this.setAttribute("aria-pressed", String(activo));
-    document.body.classList.toggle("gv-midiendo", activo);
+    $("#gv-medir-opciones").hidden = !activo;
+    doHighlight = !activo;
+    if (activo) cerrarPopup();
+  });
+  $$("#gv-medir-opciones button").forEach(function (b) {
+    b.addEventListener("click", function () {
+      var sel = $("#type");
+      sel.value = b.dataset.medida;
+      sel.onchange();
+      seleccionar("#gv-medir-opciones", b);
+    });
   });
   map.addControl(new ol.control.ScaleLine({ units: "metric", minWidth: 80 }));
 
@@ -253,7 +297,8 @@
         '<p class="gv-nota">Cuenca alargada y de montaña: la crecida baja rápido desde la cordillera y llega al tramo plano donde está Buenavista.</p></div>';
     }
   };
-  var TEMA_DE_PESTANA = { resumen: "edificaciones", suelo: "uso", acceso: "edificaciones", riesgo: "inundacion" };
+  var TEMA_DE_PESTANA = { suelo: "uso", acceso: "edificaciones", riesgo: "inundacion" };
+  var coberturaDeAcceso = false;
 
   function mostrar(pestana) {
     seleccionar("#gv-pestanas", $('#gv-pestanas [data-pestana="' + pestana + '"]'));
@@ -267,10 +312,13 @@
       });
     });
     var cob = pestana === "acceso";
-    ["Cobertura educación (300 m)", "Cobertura salud (600 m)"].forEach(function (n) {
-      if (capas[n]) capas[n].setVisible(cob);
-    });
-    aplicarTema(TEMA_DE_PESTANA[pestana]);
+    if (cob !== coberturaDeAcceso) {
+      ["Cobertura educación (300 m)", "Cobertura salud (600 m)"].forEach(function (n) {
+        if (capas[n]) capas[n].setVisible(cob);
+      });
+      coberturaDeAcceso = cob;
+    }
+    if (TEMA_DE_PESTANA[pestana]) aplicarTema(TEMA_DE_PESTANA[pestana]);
   }
   $$("#gv-pestanas button").forEach(function (b) {
     b.addEventListener("click", function () { mostrar(b.dataset.pestana); });
@@ -278,5 +326,22 @@
 
   $("#gv-meta-sector").textContent = num(D.area_m2) + " m² · " + num(D.poblacion) + " habitantes (estimado)";
   mostrar("resumen");
+  aplicarTema("edificaciones");
+  sincronizar();
   encuadrar(0);
+
+  /* ---------- Ventana emergente: siempre en la zona libre del mapa ---------- */
+  overlayPopup.autoPan = false;
+  function ajustarPopup() {
+    var p = $("#popup");
+    if (!p || p.style.display === "none") return;
+    if (esMovil()) { abrirPanel("indicadores", false); abrirPanel("capas", false); }
+    setTimeout(function () {
+      var r = p.getBoundingClientRect(), a = areaLibre(), tam = map.getSize();
+      var dx = r.left < a.izq ? r.left - a.izq : (r.right > a.der ? r.right - a.der : 0);
+      var dy = r.top < a.arriba ? r.top - a.arriba : (r.bottom > a.abajo ? r.bottom - a.abajo : 0);
+      if (dx || dy) vista.animate({ center: map.getCoordinateFromPixel([tam[0] / 2 + dx, tam[1] / 2 + dy]), duration: 250 });
+    }, 80);
+  }
+  overlayPopup.on("change:position", ajustarPopup);
 })();

@@ -102,12 +102,13 @@ svg { display: block; }
   padding: 0 10px 0 12px;
   border-radius: var(--gv-radio);
   display: grid;
-  grid-template-columns: 1fr auto 1fr;
+  grid-template-columns: auto 1fr auto;
   align-items: center;
   gap: 16px;
   color: var(--gv-oscuro-texto);
   z-index: 30;
 }
+#gv-temas { justify-self: center; }
 .gv-marca { display: flex; align-items: center; gap: 12px; min-width: 0; }
 .gv-logo {
   width: 36px; height: 36px; flex-shrink: 0;
@@ -191,6 +192,7 @@ svg { display: block; }
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  overflow: clip;  /* el navegador no puede desplazar el panel al enfocar un control */
   z-index: 20;
   transition: opacity .25s ease, transform .3s cubic-bezier(.2, .8, .2, 1);
 }
@@ -198,7 +200,7 @@ svg { display: block; }
 .gv-panel { visibility: visible; }
 .gv-panel[hidden] { transition: opacity .25s ease, transform .3s cubic-bezier(.2, .8, .2, 1), visibility 0s .3s; }
 body.gv-sin-transicion .gv-panel, body.gv-sin-transicion .gv-pastilla, body.gv-sin-transicion .ol-scale-line { transition: none !important; }
-#gv-indicadores { left: var(--gv-margen); bottom: var(--gv-margen); }
+#gv-indicadores { left: var(--gv-margen); }
 #gv-indicadores[hidden] { transform: translateX(-24px); }
 /* El panel de capas termina 12 px arriba de los controles del mapa, que nunca se mueven */
 #gv-capas {
@@ -296,9 +298,10 @@ body.gv-sin-transicion .gv-panel, body.gv-sin-transicion .gv-pastilla, body.gv-s
 .gv-interruptor {
   display: flex; align-items: center; justify-content: space-between; gap: 10px;
   padding: 8px 12px; font-size: 13px; cursor: pointer;
+  position: relative;
 }
 .gv-interruptor + .gv-interruptor { border-top: 0.5px solid var(--gv-linea); }
-.gv-interruptor input { position: absolute; opacity: 0; pointer-events: none; }
+.gv-interruptor input { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: pointer; }
 .gv-switch {
   position: relative; width: 42px; height: 26px; flex-shrink: 0;
   border-radius: 13px; background: var(--gv-relleno);
@@ -315,6 +318,8 @@ body.gv-sin-transicion .gv-panel, body.gv-sin-transicion .gv-pastilla, body.gv-s
 .gv-interruptor input:focus-visible + .gv-switch { outline: 2px solid var(--gv-azul); outline-offset: 2px; }
 
 .gv-leyenda { padding: 6px 0; }
+.gv-leyenda-grupo { margin: 8px 12px 2px; font-size: 12px; font-weight: 600; }
+.gv-leyenda-vacia { margin: 8px 12px; font-size: 12.5px; color: var(--gv-texto-2); }
 .gv-leyenda div { display: flex; align-items: center; gap: 10px; padding: 5px 12px; font-size: 12.5px; }
 .gv-leyenda img { width: 18px; height: 18px; object-fit: contain; flex-shrink: 0; }
 .gv-muestra { display: block; width: 18px; height: 18px; border-radius: 4px; flex-shrink: 0; }
@@ -344,21 +349,23 @@ body.gv-sin-transicion .gv-panel, body.gv-sin-transicion .gv-pastilla, body.gv-s
 
 /* Se ocultan los controles originales de qgis2web (los reemplazan los de arriba) */
 #top-left-container, #top-right-container, .layer-switcher, .ol-zoom, .measure-control > button { display: none !important; }
-.measure-control { position: fixed !important; }
-.measure-control label {
-  display: none;
-  position: fixed; right: calc(var(--gv-margen) + 56px); bottom: calc(var(--gv-margen) + 40px);
-  padding: 8px 12px; border-radius: 12px;
-  background: var(--gv-vidrio); -webkit-backdrop-filter: var(--gv-blur); backdrop-filter: var(--gv-blur);
-  box-shadow: var(--gv-sombra); font-size: 13px; color: var(--gv-texto);
+#gv-medir-opciones {
+  position: fixed;
+  right: calc(var(--gv-margen) + 56px);
+  bottom: var(--gv-pastilla-fondo);
+  width: 190px;
+  padding: 4px;
+  border-radius: 14px;
+  z-index: 20;
 }
-body.gv-midiendo .measure-control label { display: block !important; }
-.measure-control select { margin-left: 6px; border: 0; border-radius: 6px; padding: 3px 6px; background: var(--gv-relleno); color: inherit; font: inherit; }
-.ol-tooltip {
-  padding: 4px 8px; border-radius: 8px; font: 600 12px var(--gv-fuente);
-  background: rgba(22, 22, 24, 0.8); color: #fff; white-space: nowrap;
+#gv-medir-opciones button { padding: 0 8px; }
+.tooltip {
+  padding: 4px 8px !important; border-radius: 8px !important; font: 600 12px var(--gv-fuente) !important;
+  background: rgba(22, 22, 24, 0.85) !important; color: #fff !important; opacity: 1 !important; white-space: nowrap;
 }
-.ol-tooltip-static { background: var(--gv-azul); }
+.tooltip-static { background: var(--gv-azul) !important; }
+.tooltip-measure:before, .tooltip-static:before { display: none !important; }
+.tooltip.hidden { display: block; }
 
 /* Escala y atribución */
 .ol-scale-line {
@@ -374,12 +381,18 @@ body.gv-indicadores-abierto .ol-scale-line { left: calc(var(--gv-margen) * 2 + v
   position: fixed !important; right: var(--gv-margen) !important; bottom: var(--gv-margen) !important;
   margin: 0 !important; padding: 0 !important; background: none !important;
 }
-.bottom-attribution, .bottom-attribution * { font: 500 10.5px var(--gv-fuente) !important; color: rgba(255, 255, 255, 0.85) !important; text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6); }
+.bottom-attribution {
+  padding: 2px 8px !important; border-radius: 8px !important;
+  background: rgba(255, 255, 255, 0.85) !important; border: 0 !important; box-shadow: none !important;
+}
+.bottom-attribution, .bottom-attribution * { font: 500 10.5px var(--gv-fuente) !important; color: #3a3a3c !important; }
+.bottom-attribution li { padding: 0 !important; list-style: none; }
 .ol-attribution { display: none !important; }
 
 /* ---------- Ventana emergente ---------- */
 .ol-popup {
-  min-width: 260px !important; max-width: 320px !important;
+  min-width: min(260px, calc(100vw - 32px)) !important; max-width: min(320px, calc(100vw - 32px)) !important;
+  width: max-content;
   padding: 0 !important;
   border: 0 !important; border-radius: 16px !important;
   background: var(--gv-vidrio) !important;
@@ -390,7 +403,7 @@ body.gv-indicadores-abierto .ol-scale-line { left: calc(var(--gv-margen) * 2 + v
   overflow: visible;
 }
 .ol-popup::after, .ol-popup::before { display: none !important; }
-#popup-content { max-height: 300px; overflow-y: auto; padding: 14px 16px 10px; font-size: 13px; }
+#popup-content { max-height: min(300px, 45vh); overflow-y: auto; padding: 14px 16px 10px; font-size: 13px; }
 #popup-content ul { margin: 0; padding: 0; list-style: none; }
 #popup-content a, #popup-content a b { display: block; margin: 2px 0 6px; font: 700 15px var(--gv-fuente-titulo); color: var(--gv-texto); text-decoration: none; letter-spacing: -0.01em; }
 #popup-content table { width: 100%; border-collapse: collapse; margin-bottom: 8px; }
@@ -406,28 +419,59 @@ body.gv-indicadores-abierto .ol-scale-line { left: calc(var(--gv-margen) * 2 + v
 .ol-popup-closer::after { content: "✕" !important; position: static !important; font-size: 11px; color: var(--gv-texto-2); }
 
 /* ---------- Pantallas medianas ---------- */
-@media (max-width: 1100px) {
-  #gv-barra { grid-template-columns: auto 1fr auto; }
-  #gv-temas { justify-self: center; }
+@media (max-width: 1200px) {
   .gv-marca p { display: none; }
   .gv-boton-icono span { display: none; }
   .gv-boton-icono { padding: 0 10px; }
 }
+/* Tableta: los temas pasan a una segunda fila */
+@media (min-width: 721px) and (max-width: 820px) {
+  :root { --gv-barra-alto: 100px; }
+  #gv-barra { grid-template-columns: 1fr auto; grid-template-rows: 50px 42px; gap: 0 8px; }
+  #gv-temas { grid-column: 1 / -1; grid-row: 2; justify-self: stretch; }
+}
+@media (max-width: 1060px) {
+  .gv-titulo-largo { display: none; }
+  .gv-marca h1 { font-size: 15px; }
+  #gv-temas button { padding: 0 8px; font-size: 12.5px; }
+}
+/* Pantallas bajas (celular horizontal): controles en fila para dejar sitio al panel de capas */
+@media (max-height: 560px) and (min-width: 721px) {
+  :root { --gv-pastilla-alto: 44px; }
+  .gv-pastilla { flex-direction: row; }
+  .gv-separador { width: 0.5px; height: 20px; margin: 0 3px; }
+  #gv-medir-opciones { right: var(--gv-margen); bottom: calc(var(--gv-pastilla-fondo) + 56px); }
+}
+@media (max-height: 480px) and (min-width: 721px) {
+  .gv-meta, .gv-sobretitulo { display: none; }
+  .gv-panel-cabecera { padding: 10px 14px 8px; }
+  #gv-capas { max-height: calc(100% - var(--gv-panel-top) - var(--gv-margen)); }
+  body.gv-capas-abierto .gv-pastilla, body.gv-capas-abierto #gv-medir-opciones, body.gv-capas-abierto #bottom-right-container { display: none; }
+}
 
 /* ---------- Móvil: los paneles pasan a hojas inferiores ---------- */
 @media (max-width: 720px) {
-  :root { --gv-margen: 8px; --gv-barra-alto: 104px; }
-  #gv-barra { grid-template-columns: 1fr auto; grid-template-rows: 48px 44px; padding: 0 8px 0 10px; gap: 0 8px; }
-  #gv-temas { grid-column: 1 / -1; grid-row: 2; justify-self: stretch; overflow-x: auto; }
-  #gv-temas button { padding: 0 6px; font-size: 12px; }
+  :root { --gv-margen: 8px; --gv-barra-alto: 128px; }
+  #gv-barra { grid-template-columns: 1fr auto; grid-template-rows: 48px 70px; padding: 0 8px 0 10px; gap: 0 8px; }
+  #gv-temas { grid-column: 1 / -1; grid-row: 2; justify-self: stretch; grid-auto-flow: row; grid-template-columns: repeat(3, 1fr); }
+  #gv-temas button { padding: 0 4px; font-size: 12px; }
   .gv-logo { width: 30px; height: 30px; }
   .gv-marca h1 { font-size: 17px; }
   .gv-titulo-largo { display: none; }
   .gv-panel, #gv-capas {
     left: var(--gv-margen) !important; right: var(--gv-margen) !important; width: auto;
     top: auto; bottom: var(--gv-margen) !important;
-    max-height: 58vh;
+    max-height: calc(100% - var(--gv-panel-top) - var(--gv-pastilla-alto) - var(--gv-margen) * 2);
   }
+  /* Celular muy pequeño: la hoja usa toda la altura y los controles se ocultan mientras está abierta */
+  @media (max-height: 640px) {
+    .gv-panel, #gv-capas { max-height: calc(100% - var(--gv-panel-top) - var(--gv-margen)); }
+    body.gv-indicadores-abierto .gv-pastilla, body.gv-capas-abierto .gv-pastilla { display: none; }
+    body.gv-indicadores-abierto .ol-scale-line, body.gv-capas-abierto .ol-scale-line { display: none; }
+  }
+  /* En celular la hoja abierta tapa la atribución y los controles quedan arriba */
+  body.gv-indicadores-abierto #bottom-right-container, body.gv-capas-abierto #bottom-right-container { display: none; }
+  #gv-medir-opciones { right: calc(var(--gv-margen) + 52px); bottom: auto; top: var(--gv-panel-top); }
   .gv-panel[hidden] { transform: translateY(24px); }
   .gv-pastilla { bottom: auto; top: calc(var(--gv-panel-top)); }
   body.gv-indicadores-abierto .ol-scale-line { left: var(--gv-margen) !important; }

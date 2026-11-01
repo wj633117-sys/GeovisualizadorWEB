@@ -357,7 +357,7 @@ function updatePopup() {
 } 
 
 function onSingleClickFeatures(evt) {
-    if (doHover || sketch) {
+    if (doHover || sketch || measuring) {
         return;
     }
     if (!featuresPopupActive) {
@@ -414,7 +414,7 @@ function onSingleClickFeatures(evt) {
 }
 
 function onSingleClickWMS(evt) {
-    if (doHover || sketch) {
+    if (doHover || sketch || measuring) {
         return;
     }
     if (!featuresPopupActive) {
@@ -549,7 +549,7 @@ let measuring = false;
         }
         if (measuring) {
             /** @type {string} */
-            var helpMsg = 'Click to start drawing';
+            var helpMsg = 'Clic para empezar';
             if (sketch) {
                 var geom = (sketch.getGeometry());
                 if (geom instanceof ol.geom.Polygon) {
@@ -622,7 +622,7 @@ let measuring = false;
 	 * Message to show when the user is drawing a line.
 	 * @type {string}
 	 */
-	var continueLineMsg = 'Click to continue drawing the line';
+	var continueLineMsg = 'Clic para seguir; doble clic para terminar';
 
 
 
@@ -630,7 +630,7 @@ let measuring = false;
 	 * Message to show when the user is drawing a polygon.
 	 * @type {string}
 	 */
-	var continuePolygonMsg = "1click continue, 2click close";
+	var continuePolygonMsg = 'Clic para seguir; doble clic para cerrar';
 
 
 	var typeSelect = document.getElementById("type");
@@ -833,10 +833,10 @@ let measuring = false;
       }
     var output;
     if (length > 100) {
-      output = (Math.round(length / 1000 * 100) / 100) +
+      output = (Math.round(length / 1000 * 100) / 100).toLocaleString('es-EC') +
           ' ' + 'km';
     } else {
-      output = (Math.round(length * 100) / 100) +
+      output = (Math.round(length * 100) / 100).toLocaleString('es-EC') +
           ' ' + 'm';
     }
     return output;
@@ -853,9 +853,9 @@ let measuring = false;
 		var area = Math.abs(ol.sphere.getArea(geom));
 		var output;
 		if (area > 1000000) {
-			output = Math.round((area / 1000000) * 1000) / 1000 + ' ' + 'km<sup>2</sup>';
+			output = (Math.round((area / 1000000) * 1000) / 1000).toLocaleString('es-EC') + ' ' + 'km<sup>2</sup>';
 		} else {
-			output = Math.round(area * 100) / 100 + ' ' + 'm<sup>2</sup>';
+			output = (Math.round(area * 100) / 100).toLocaleString('es-EC') + ' ' + 'm<sup>2</sup>';
 		}
 		return output.replace('.', ',');
 	};
