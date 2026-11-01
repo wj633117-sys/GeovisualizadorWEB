@@ -32,8 +32,12 @@
     cobertura: { capa: "Cobertura Sentinel-2", titulo: "Cobertura (Sentinel-2)", leyenda: [["#7f7f7f", "Construido"], ["#006D2C", "Vegetación densa"], ["#A6D96A", "Vegetación baja"], ["#D8B365", "Suelo desnudo"], ["#2B8CBE", "Agua"]] },
     cuenca: { capa: "Cuenca del río Buenavista", titulo: "Cuenca del río Buenavista", extra: "Red de drenaje", encuadre: true }
   };
-  var REFERENCIA = ["Equipamientos", "Red vial", "Hidrografía", "Límite de estudio",
-                    "Cobertura educación (300 m)", "Cobertura salud (600 m)"];
+  var GRUPOS_CAPAS = {
+    "#gv-interruptores-tema": ["Edificaciones", "Uso del suelo", "Susceptibilidad a inundación", "Manzanas",
+                               "Cobertura Sentinel-2", "Cuenca del río Buenavista", "Red de drenaje"],
+    "#gv-interruptores": ["Equipamientos", "Red vial", "Hidrografía", "Límite de estudio",
+                          "Cobertura educación (300 m)", "Cobertura salud (600 m)"]
+  };
 
   /* ---------- Paneles ---------- */
   function abrirPanel(cual, abrir) {
@@ -110,12 +114,17 @@
   });
 
   /* ---------- Interruptores de capas de referencia ---------- */
-  $("#gv-interruptores").innerHTML = REFERENCIA.filter(function (n) { return capas[n]; }).map(function (n, i) {
-    return '<label class="gv-interruptor"><span>' + n + '</span><input type="checkbox" data-capa="' + n + '"' +
-      (capas[n].getVisible() ? " checked" : "") + '><span class="gv-switch"></span></label>';
-  }).join("");
-  $$("#gv-interruptores input").forEach(function (inp) {
-    inp.addEventListener("change", function () { capas[inp.dataset.capa].setVisible(inp.checked); });
+  Object.keys(GRUPOS_CAPAS).forEach(function (grupo) {
+    $(grupo).innerHTML = GRUPOS_CAPAS[grupo].filter(function (n) { return capas[n]; }).map(function (n) {
+      return '<label class="gv-interruptor"><span>' + n + '</span><input type="checkbox" data-capa="' + n + '"' +
+        (capas[n].getVisible() ? " checked" : "") + '><span class="gv-switch"></span></label>';
+    }).join("");
+  });
+  $$(".gv-lista input[data-capa]").forEach(function (inp) {
+    var c = capas[inp.dataset.capa];
+    inp.addEventListener("change", function () { c.setVisible(inp.checked); });
+    // El interruptor sigue a la capa aunque la cambie un tema o una pestaña
+    c.on("change:visible", function () { inp.checked = c.getVisible(); });
   });
 
   /* ---------- Controles del mapa ---------- */
@@ -260,8 +269,6 @@
     var cob = pestana === "acceso";
     ["Cobertura educación (300 m)", "Cobertura salud (600 m)"].forEach(function (n) {
       if (capas[n]) capas[n].setVisible(cob);
-      var inp = document.querySelector('#gv-interruptores input[data-capa="' + n + '"]');
-      if (inp) inp.checked = cob;
     });
     aplicarTema(TEMA_DE_PESTANA[pestana]);
   }
